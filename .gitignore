@@ -1,0 +1,5 @@
+build/
+.cmake/
+/cmake_install.cmake
+/flake.lock
+.idea/
