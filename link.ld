@@ -8,6 +8,15 @@ SECTIONS {
     }
     . = ALIGN(4096);
 
+    PROVIDE(__init_array_start = .);
+    .init_array : {
+        *(.init_array)
+        *(.init_array.*)
+        *(.ctors)
+        *(.ctors.*)
+    }
+    PROVIDE(__init_array_end = .);
+
     .data : {
         *(.data)
     }
@@ -18,10 +27,15 @@ SECTIONS {
     }
     . = ALIGN(4096);
 
+    _bss_start = .;
     .bss : {
         *(.bss)
     }
     . = ALIGN(4096);
+    _bss_end = .;
+    _bss_size = (_bss_end - _bss_start) >> 3;
 
     _end = .;
+
+    _usable = 0x80000000;
 }

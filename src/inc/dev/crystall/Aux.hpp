@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <lib/Mmio.hpp>
+#include <Console.hpp>
 #include <dev/crystall/Gpio.hpp>
 #define AUX_BASE (MMIO_BASE + 0x215000)
 #define AUX_PIN_UART_TX 14
@@ -94,14 +94,14 @@ namespace dev::crystall::aux {
          *
          * @param[in] c Character to send.
          */
-        void PutChar(char c);
+        static void PutChar(char c);
 
         /**
          * @brief Sends a string via the UART interface.
          *
          * @param[in] str String to send.
          */
-        void PutString(const char* str)
+        static void PutString(const char* str)
         {
             while (*str) PutChar(*str++);
         }

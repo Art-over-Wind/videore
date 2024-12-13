@@ -3,9 +3,11 @@
 .extern _main
 .global _entry
 
-.ascii "Hello from ASM"
-
 _entry:
+    ; Kernel stack pointer.
+    ld r0, _entry
+    mov sp, r0
+
     bl _main
 
 _halt:

@@ -5,9 +5,9 @@ set(CMAKE_ASM_COMPILER "vc4-elf-gcc")
 set(CMAKE_CXX_COMPILER "vc4-elf-gcc")
 set(OBJCOPY "vc4-elf-objcopy")
 set(OBJCOPY_ARGS -O binary)
-set(CMAKE_CXX_FLAGS "-nostdlib -nostartfiles")
+set(CMAKE_CXX_FLAGS "-nostdlib -fno-rtti -fno-exceptions -fno-threadsafe-statics")
 set(CMAKE_C_STANDARD 23)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(ROOT_DIR ${CMAKE_BINARY_DIR}/..)
 set(LINKSCRIPT_PATH ${ROOT_DIR}/link.ld)
@@ -26,10 +26,16 @@ set(CMAKE_EXECUTABLE_SUFFIX .elf)
 add_executable(videore
         entry.s
         Main.cpp
+        inc/Runtime.cpp
 )
 add_library(core
         inc/dev/crystall/Aux.cpp
         inc/dev/crystall/Gpio.cpp
+        inc/Console.cpp
+        inc/Console.hpp
+        inc/String.hpp
+        inc/String.cpp
+        inc/Mem.cpp
 )
 target_link_libraries(videore core -T ${LINKSCRIPT_PATH})
 target_include_directories(videore PRIVATE ${DIR_INCLUDE})
