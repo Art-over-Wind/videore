@@ -24,10 +24,20 @@
 #define MEM_ALIGN(addr, alignment) ((addr + alignment - 1) & ~(alignment - 1))
 
 /**
+ * @brief Get a pointer to the node header from pointer to a data block.
+ */
+#define HEADER_PTR(ptr) ((Node*)((uint64_t)ptr - sizeof(Node)))
+
+/**
 * Memory management.
 */
-namespace mem
+namespace memory
 {
+    /**
+     * @brief copy @p size bytes from the @p src memory region to @p dst.
+     */
+    void Copy(void* dst, const void* src, uint32_t size);
+
     /**
      * @brief A heap implementation.
      */
@@ -46,9 +56,16 @@ namespace mem
             Node* next;
 
             /**
+             * Pointer to the previous node.
+             *
+             * Equals to @code NULL @endcode if there is not previous node.
+             */
+            Node* prev;
+
+            /**
              * Data block size (@b excluding the node header).
              */
-            uint32_t size;
+            uint64_t size;
 
             /**
              * Is the node in use already?
@@ -66,6 +83,7 @@ namespace mem
             Node()
             {
                 next = nullptr;
+                prev = nullptr;
                 size = 0;
                 used = true;
             }
@@ -98,6 +116,9 @@ namespace mem
             end = (char*)base + (MEM_PAGE_SIZE * size);
         }
 
+        /**
+         * @brief Release all nodes and destruct the root node then.
+         */
         ~Heap()
         {
             root->used = false;
@@ -112,14 +133,14 @@ namespace mem
          * @returns @code nullptr @endcode if not enough
          * dedicated to the heap memory left.
          */
-        void* Allocate(uint32_t size);
+        void* Allocate(uint64_t size);
 
         /**
-         * @brief Free the memory allocated by the @code Allocate @endcode method.
+         * @brief Release the memory allocated by the @code Allocate @endcode method.
          *
          * @param[in] ptr Pointer to the memory chunk.
          */
-        static void Free(void* ptr);
+        static void Release(void* ptr);
     };
 
     /// Main kernel heap.
