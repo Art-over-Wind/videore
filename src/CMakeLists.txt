@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_C_COMPILER "vc4-elf-gcc")
-set(CMAKE_ASM_COMPILER "vc4-elf-gcc")
-set(CMAKE_CXX_COMPILER "vc4-elf-gcc")
+#set(CMAKE_C_COMPILER "vc4-elf-gcc")
+set(CMAKE_ASM_COMPILER "vc4-elf-as")
+set(CMAKE_CXX_COMPILER "vc4-elf-g++")
 set(OBJCOPY "vc4-elf-objcopy")
 set(OBJCOPY_ARGS -O binary)
-set(CMAKE_CXX_FLAGS "-nostdlib -fno-rtti -fno-exceptions -fno-threadsafe-statics")
+set(CMAKE_CXX_FLAGS "-nostdlib -fno-exceptions -ffreestanding -O2")
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
@@ -15,18 +15,16 @@ set(DIR_INCLUDE ${CMAKE_SOURCE_DIR}/inc)
 
 project(videore
         ASM
-        C
         CXX
 )
 # Make -rdynamic go away.
-set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+#set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 set(CMAKE_EXECUTABLE_SUFFIX .elf)
 
 add_executable(videore
         entry.s
         Main.cpp
-        inc/Runtime.cpp
 )
 add_library(core
         inc/dev/crystall/Aux.cpp
@@ -35,7 +33,12 @@ add_library(core
         inc/Console.hpp
         inc/String.hpp
         inc/String.cpp
-        inc/Mem.cpp
+        inc/Memory.hpp
+        inc/Memory.cpp
+        inc/Runtime.cpp
+        inc/dev/crystall/Cortex.cpp
+        inc/dev/crystall/Cortex.hpp
+        inc/Iterator.hpp
 )
 target_link_libraries(videore core -T ${LINKSCRIPT_PATH})
 target_include_directories(videore PRIVATE ${DIR_INCLUDE})

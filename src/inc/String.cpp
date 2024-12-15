@@ -1,13 +1,8 @@
-#include <cstdarg>
 #include <cstdint>
+#include <cstring>
 #include <String.hpp>
+#include <Memory.hpp>
 
 namespace type
 {
-
-    void String::Reverse(char* buf, const uint16_t length)
-    {
-
-    }
-
 }

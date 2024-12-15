@@ -4,9 +4,8 @@
 .global _entry
 
 _entry:
-    ; Kernel stack pointer.
-    ld r0, _entry
-    mov sp, r0
+    ; Load address.
+    lea r0, _entry
 
     bl _main
 

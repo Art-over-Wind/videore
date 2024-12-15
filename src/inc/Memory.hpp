@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include <cstdint>
 #define MMIO_BASE 0x7E000000
 #define MEM_PAGE_SIZE 4096
 /**
@@ -33,6 +33,18 @@
 */
 namespace memory
 {
+    /// Possible function return codes.
+    enum class Status : uint8_t
+    {
+        Ok = 0,
+
+        /// Not enough memory to process operation.
+        Overflow,
+
+        /// Non-null pointer was passed as null.
+        NullPointer,
+    };
+
     /**
      * @brief copy @p size bytes from the @p src memory region to @p dst.
      */
@@ -101,19 +113,17 @@ namespace memory
 
     public:
         /**
-         * @brief init a new heap in the specified @p base address.
+         * @brief init a new heap on the specified @p base address.
          *
          * @details Basically, only creates a null node at the given address.
          *
          * @param[in] base Base address of the heap.
          * @param[in] size Size of the heap in 4KB pages.
          */
-        Heap(void* base, uint32_t size)
+        Heap(void* base, const uint32_t size)
+            : root((Node*)base), end(base + (MEM_PAGE_SIZE * size))
         {
-            root = (Node*)base;
             *root = Node();
-
-            end = (char*)base + (MEM_PAGE_SIZE * size);
         }
 
         /**
@@ -136,6 +146,16 @@ namespace memory
         void* Allocate(uint64_t size);
 
         /**
+         * @brief Reallocate data to other block with new @p size.
+         *
+         * @param[inout] ptr Pointer to the existing data block.
+         * @param[in] size Requested new size.
+         * @return @code Status::Overflow @endcode
+         * Unable to allocate a new data block.
+         */
+        Status Reallocate(void* ptr, uint64_t size);
+
+        /**
          * @brief Release the memory allocated by the @code Allocate @endcode method.
          *
          * @param[in] ptr Pointer to the memory chunk.
@@ -143,6 +163,6 @@ namespace memory
         static void Release(void* ptr);
     };
 
-    /// Main kernel heap.
-    static Heap KernelHeap = Heap(MEM_KERNEL_HEAP, MEM_HEAP_SIZE);
+    /// Main core heap.
+    static Heap CoreHeap = Heap(MEM_KERNEL_HEAP, MEM_HEAP_SIZE);
 }

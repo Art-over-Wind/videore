@@ -1,4 +1,5 @@
 #include <Memory.hpp>
+#include <cstdint>
 
 namespace memory
 {
@@ -35,7 +36,7 @@ namespace memory
                 // If released node was larger than the new one
                 // and if there are more than 0 available bytes,
                 // create a new node on the left space.
-                if (size_left >= sizeof(Node) && (size_left - sizeof(Node)) > 0)
+                if (size_left > sizeof(Node))
                 {
                     Node* new_node = (Node*)((uint64_t)node->data + size);
                     new_node->next = node->next;
