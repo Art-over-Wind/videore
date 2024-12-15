@@ -9,13 +9,14 @@ SECTIONS {
     . = ALIGN(4096);
 
     PROVIDE(__init_array_start = .);
-    .init_array : {
+    .init.array : {
         *(.init_array)
         *(.init_array.*)
         *(.ctors)
         *(.ctors.*)
     }
     PROVIDE(__init_array_end = .);
+    . = ALIGN(4096);
 
     .data : {
         *(.data)

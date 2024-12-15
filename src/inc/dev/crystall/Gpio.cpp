@@ -1,9 +1,9 @@
 #include <dev/crystall/Gpio.hpp>
-#include <Mem.hpp>
+#include <Memory.hpp>
 #include <stdint.h>
-#include <dev/crystall/Crystall.hpp>
+#include <Core.hpp>
 
-using dev::crystall::Crystall;
+using core::Waste;
 
 namespace dev::crystall::gpio
 {
@@ -91,9 +91,9 @@ namespace dev::crystall::gpio
         uint8_t off = pin % 32;
 
         GpioDev->pud.ctrl = (uint32_t)mode;
-        Crystall::Waste(150);
+        Waste(150);
         GpioDev->pud.clk[idx] = 1 << off;
-        Crystall::Waste(150);
+        Waste(150);
 
         GpioDev->pud.ctrl = 0;
         GpioDev->pud.clk[idx] = 0;

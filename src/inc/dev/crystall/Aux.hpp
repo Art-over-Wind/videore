@@ -2,13 +2,17 @@
 #include <stdint.h>
 #include <Console.hpp>
 #include <dev/crystall/Gpio.hpp>
+#include <String.hpp>
+
 #define AUX_BASE (MMIO_BASE + 0x215000)
 #define AUX_PIN_UART_TX 14
 #define AUX_PIN_UART_RX 15
+#define AUX_CLOCK_FREQ 19200000
 
 using dev::crystall::gpio::Gpio;
 using dev::crystall::gpio::PinMode;
 using dev::crystall::gpio::PudMode;
+using type::String;
 
 /**
  * The AUX controller and their peripherals interface.
@@ -94,16 +98,24 @@ namespace dev::crystall::aux {
          *
          * @param[in] c Character to send.
          */
-        static void PutChar(char c);
+        void PutChar(char c) const;
 
         /**
          * @brief Sends a string via the UART interface.
          *
          * @param[in] str String to send.
          */
-        static void PutString(const char* str)
+        void PutString(const char* str) const
         {
             while (*str) PutChar(*str++);
+        }
+
+        void Print(const String& str) const
+        {
+            for (const char c : str)
+            {
+                PutChar(c);
+            }
         }
     };
 }

@@ -1,8 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <Memory.hpp>
-
-#include "Iterator.hpp"
+#include <Iterator.hpp>
 
 using memory::CoreHeap;
 using memory::Copy;
@@ -20,10 +19,25 @@ namespace type
         /// String length including the null terminator.
         uint32_t length;
 
-        /// Index used to iterate through the string.
-        uint32_t index;
-
     public:
+        /**
+         * @brief Create an empty string.
+         */
+        String()
+            : length(0)
+        {
+            str = (char*)CoreHeap.Allocate(0);
+        }
+
+        /**
+         * @brief Allocate a new string
+         * but do not define any data.
+         * @param len String length (including the null terminator).
+         */
+        String(uint32_t len) : length(len)
+        {
+            str = (char*)CoreHeap.Allocate(len);
+        }
 
         /**
          * @brief Create a new string from the raw char sequence.
@@ -32,9 +46,12 @@ namespace type
         String(const char* data)
             : length(GetLen(data))
         {
-            str = static_cast<char*>(CoreHeap.Allocate(length));
+            str = (char*)CoreHeap.Allocate(length);
             Copy(str, data, length);
         }
+
+        String(void* ptr)
+            : str((char*)ptr), length(GetLen(str)) {}
 
         /**
          * @brief Release the allocated string.
@@ -48,6 +65,10 @@ namespace type
         {
             return str[idx];
         }
+
+        //String operator+(const String& other) const;
+        String Add(const String& other) const;
+        //String& operator+=(const String& other);
 
         Iterator<char> begin() const override
         {

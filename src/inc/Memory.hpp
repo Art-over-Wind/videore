@@ -33,22 +33,13 @@
 */
 namespace memory
 {
-    /// Possible function return codes.
-    enum class Status : uint8_t
-    {
-        Ok = 0,
-
-        /// Not enough memory to process operation.
-        Overflow,
-
-        /// Non-null pointer was passed as null.
-        NullPointer,
-    };
-
     /**
-     * @brief copy @p size bytes from the @p src memory region to @p dst.
+     * @brief Copy bytes from @p src to @p dst.
+     * @param dst Destination pointer.
+     * @param src Source pointer.
+     * @param size Size of data to be copied (bytes).
      */
-    void Copy(void* dst, const void* src, uint32_t size);
+    void Copy(void* dst, const void* src, uint64_t size);
 
     /**
      * @brief A heap implementation.
@@ -148,12 +139,12 @@ namespace memory
         /**
          * @brief Reallocate data to other block with new @p size.
          *
-         * @param[inout] ptr Pointer to the existing data block.
+         * @param[in] ptr Pointer to the existing data block.
          * @param[in] size Requested new size.
-         * @return @code Status::Overflow @endcode
-         * Unable to allocate a new data block.
+         * @return Pointer to the new data block.
+         * @return @code nullptr @endcode Could not allocate a new data block.
          */
-        Status Reallocate(void* ptr, uint64_t size);
+        void* Reallocate(void* ptr, uint64_t size);
 
         /**
          * @brief Release the memory allocated by the @code Allocate @endcode method.

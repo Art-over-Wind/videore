@@ -1,8 +1,8 @@
-#include <Mem.hpp>
+#include <Memory.hpp>
 #include <cstdint>
 
 using std::size_t;
-using mem::KernelHeap;
+using memory::CoreHeap;
 
 void* __dso_handle = nullptr;
 
@@ -13,20 +13,20 @@ extern "C" int __cxa_atexit(void (*)(void*), void*, void*)
 
 void* operator new(size_t count)
 {
-    return KernelHeap.Allocate(count);
+    return CoreHeap.Allocate(count);
 }
 
 void* operator new[](size_t count)
 {
-    return KernelHeap.Allocate(count);
+    return CoreHeap.Allocate(count);
 }
 
 void operator delete(void* ptr)
 {
-    KernelHeap.Free(ptr);
+    CoreHeap.Release(ptr);
 }
 
 void operator delete[](void* ptr)
 {
-    KernelHeap.Free(ptr);
+    CoreHeap.Release(ptr);
 }

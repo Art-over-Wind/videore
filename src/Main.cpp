@@ -1,21 +1,31 @@
 #include <dev/crystall/Aux.hpp>
 #include <String.hpp>
-#define AUX_CLOCK_FREQ 19200000
 
 using dev::crystall::aux::MiniUart;
 using io::Console;
 using type::String;
 
-extern "C" void _main()
+/**
+ * @brief A main runtime function.
+ * @param entry Entry address.
+ */
+extern "C" void _main(uint32_t entry)
 {
-    MiniUart* Uart = new MiniUart(AUX_CLOCK_FREQ, 115200);
-    String str = "Hello world!\n";
+    MiniUart* uart = new MiniUart(AUX_CLOCK_FREQ, 115200);
 
-    for (char c : str)
-    {
-        Uart->PutChar(c);
-        Uart->PutChar('\n');
-    }
+    uart->PutString("[Windscape Videore]\n");
 
-    delete Uart;
+    String s1 = "Hello \n";
+    uart->PutString("BREAK 1: ");
+    uart->Print(s1);
+
+    String s2 = "World!\n";
+    uart->PutString("BREAK 2: ");
+    uart->Print(s2);
+
+    String str = s1.Add(s2);
+    uart->PutString("BREAK 3: ");
+    uart->Print(str);
+
+    delete uart;
 }

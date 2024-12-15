@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <Mem.hpp>
+#include <Memory.hpp>
 #define GPIO_BASE (MMIO_BASE + 0x200000)
 
 /**

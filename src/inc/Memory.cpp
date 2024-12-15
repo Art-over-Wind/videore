@@ -3,9 +3,9 @@
 
 namespace memory
 {
-    void Copy(void* dst, const void* src, uint32_t size)
+    void Copy(void* dst, const void* src, const uint64_t size)
     {
-        for (uint32_t i = 0; i < size; i++)
+        for (uint64_t i = 0; i < size; i++)
         {
             ((uint8_t*)dst)[i] = ((uint8_t*)src)[i];
         }
@@ -72,6 +72,26 @@ namespace memory
 
         return new_ptr->data;
     }
+
+    void* Heap::Reallocate(void* ptr, const uint64_t size)
+    {
+        Node* old_ptr = HEADER_PTR(ptr);
+
+        // If ptr is long enough to keep new data.
+        if (old_ptr->size >= size)
+        {
+            return ptr;
+        }
+
+        // Else, allocate new block.
+        void* new_ptr = Allocate(size);
+
+        // Copy data from the old pointer.
+        Copy(new_ptr, ptr, old_ptr->size);
+
+        return new_ptr;
+    }
+
 
     void Heap::Release(void* ptr)
     {

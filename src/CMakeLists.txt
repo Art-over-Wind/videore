@@ -5,7 +5,7 @@ set(CMAKE_ASM_COMPILER "vc4-elf-as")
 set(CMAKE_CXX_COMPILER "vc4-elf-g++")
 set(OBJCOPY "vc4-elf-objcopy")
 set(OBJCOPY_ARGS -O binary)
-set(CMAKE_CXX_FLAGS "-nostdlib -fno-exceptions -ffreestanding -O2")
+set(CMAKE_CXX_FLAGS "-nostdlib -fno-rtti -fno-exceptions -ffreestanding -O2")
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
@@ -36,9 +36,9 @@ add_library(core
         inc/Memory.hpp
         inc/Memory.cpp
         inc/Runtime.cpp
-        inc/dev/crystall/Cortex.cpp
-        inc/dev/crystall/Cortex.hpp
         inc/Iterator.hpp
+        inc/Core.cpp
+        inc/Core.hpp
 )
 target_link_libraries(videore core -T ${LINKSCRIPT_PATH})
 target_include_directories(videore PRIVATE ${DIR_INCLUDE})
